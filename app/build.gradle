@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 26
@@ -37,6 +38,7 @@ dependencies {
     compile 'com.squareup.retrofit2:adapter-rxjava2:2.2.0'
     compile "com.squareup.retrofit2:converter-moshi:2.2.0"
     compile 'com.squareup.okhttp3:logging-interceptor:3.6.0'
+    compile 'com.android.support:recyclerview-v7:26.+'
 }
 repositories {
     mavenCentral()
