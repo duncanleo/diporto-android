@@ -8,4 +8,5 @@
     <string name="label_join">Join</string>
     <string name="label_room_short_code">Room short code</string>
     <string name="label_cancel">Cancel</string>
+    <string name="title_activity_room">Map</string>
 </resources>
