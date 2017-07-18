@@ -10,9 +10,14 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.activity_room.*
 import me.duncanleo.diporto.R
+import me.duncanleo.diporto.model.Room
 
 
 class RoomActivity : AppCompatActivity(), OnMapReadyCallback {
+    companion object {
+        val roomKey = "room"
+    }
+
     private var googleMap: GoogleMap? = null
     private val MAPVIEW_BUNDLE_KEY = "MapViewBundleKey"
 
@@ -30,6 +35,9 @@ class RoomActivity : AppCompatActivity(), OnMapReadyCallback {
 
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        val room = intent.getParcelableExtra<Room>(roomKey)
+        supportActionBar?.title = room.name
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {

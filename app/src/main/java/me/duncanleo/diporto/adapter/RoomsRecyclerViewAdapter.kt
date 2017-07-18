@@ -27,7 +27,9 @@ class RoomsRecyclerViewAdapter : RecyclerView.Adapter<RoomsRecyclerViewAdapter.V
 
     override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
         holder?.itemView?.setOnClickListener {
-            holder.itemView?.context?.startActivity(Intent(holder.itemView.context, RoomActivity::class.java))
+            val intent = Intent(holder.itemView.context, RoomActivity::class.java)
+            intent.putExtra(RoomActivity.roomKey, data[position])
+            holder.itemView?.context?.startActivity(intent)
         }
         holder?.name?.text = data[position].name
     }
