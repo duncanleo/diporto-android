@@ -12,8 +12,9 @@ import retrofit2.converter.moshi.MoshiConverterFactory
  * Created by duncanleo on 11/7/17.
  */
 object Network {
+    val baseURL = "https://diporto.undertide.co/api/"
     fun getDiportoService(): DiportoService {
-        return getRetrofitBuilder().baseUrl("https://diporto.undertide.co/api/")
+        return getRetrofitBuilder().baseUrl(baseURL)
                 .build()
                 .create(DiportoService::class.java)
     }

@@ -4,10 +4,13 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import com.squareup.picasso.Picasso
 import me.duncanleo.diporto.R
 import me.duncanleo.diporto.model.Place
 import kotlinx.android.synthetic.main.item_place.view.*
+import me.duncanleo.diporto.network.Network
 
 /**
  * Created by duncanleo on 18/7/17.
@@ -24,6 +27,13 @@ class PlacesRecyclerViewAdapter(private val data: List<Place>) : RecyclerView.Ad
 
     override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
         holder?.name?.text = data[position].name
+
+        if (data[position].photos.any()) {
+            Picasso.with(holder?.name?.context).load("${Network.baseURL}/photos/${data[position].photos[0].id}").into(holder?.image)
+        } else {
+            holder?.image?.setImageResource(R.drawable.ic_do_not_disturb_24dp)
+        }
+
         if (data[position].reviews.any()) {
             holder?.review?.text = data[position].reviews[0].text
         }
@@ -36,5 +46,6 @@ class PlacesRecyclerViewAdapter(private val data: List<Place>) : RecyclerView.Ad
     class ViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
         val name: TextView? = itemView?.placeNameTextView
         val review: TextView? = itemView?.placeReviewTextView
+        val image: ImageView? = itemView?.imageView
     }
 }

@@ -3,8 +3,15 @@ package me.duncanleo.diporto.activity
 import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.DividerItemDecoration
+import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.MenuItem
-import com.google.android.gms.maps.CameraUpdateFactory
+import android.view.MotionEvent
+import android.view.View
+import com.facebook.rebound.SimpleSpringListener
+import com.facebook.rebound.Spring
+import com.facebook.rebound.SpringSystem
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
@@ -12,18 +19,27 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
 import kotlinx.android.synthetic.main.activity_room.*
 import me.duncanleo.diporto.R
+import me.duncanleo.diporto.adapter.PlacesRecyclerViewAdapter
 import me.duncanleo.diporto.model.Location
+import me.duncanleo.diporto.model.Place
+import me.duncanleo.diporto.model.Review
 import me.duncanleo.diporto.model.Room
+import java.util.*
 
 
-class RoomActivity : AppCompatActivity(), OnMapReadyCallback {
+class RoomActivity : AppCompatActivity(), OnMapReadyCallback, View.OnTouchListener {
     companion object {
         val roomKey = "room"
     }
 
+    val DIFFY_THRESHOLD_PERCENTAGE = 0.2
+    var downY = 0f
+    val MAX_SPRING_VALUE = 0.85
+
     private lateinit var googleMap: GoogleMap
     private val MAPVIEW_BUNDLE_KEY = "MapViewBundleKey"
     private lateinit var room: Room
+    private lateinit var spring: Spring
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +58,29 @@ class RoomActivity : AppCompatActivity(), OnMapReadyCallback {
 
         room = intent.getParcelableExtra<Room>(roomKey)
         supportActionBar?.title = room.name
+
+        val fakePlaces = MutableList(20) {
+            Place(-1, "Pink Candy $it", 1.0, 103.0, "+65 12345678", "123 ABC Street", "", listOf("food"), listOf(), listOf(Review(-1, 5.0, Date(), "It was really good!!!!", -1)))
+        }
+        placesRecyclerView.layoutManager = LinearLayoutManager(this@RoomActivity)
+        placesRecyclerView.addItemDecoration(DividerItemDecoration(this@RoomActivity, DividerItemDecoration.VERTICAL))
+        placesRecyclerView.adapter = PlacesRecyclerViewAdapter(fakePlaces)
+
+        placesRecyclerView.setOnTouchListener(this@RoomActivity)
+
+        spring = SpringSystem.create().createSpring()
+        spring.addListener(object: SimpleSpringListener() {
+            override fun onSpringUpdate(spring: Spring) {
+                placesRecyclerView.translationY = Math.max(-0.02f * placesRecyclerView.height, (spring.currentValue * placesRecyclerView.height).toFloat())
+                val alphaValue = Math.min(MAX_SPRING_VALUE, Math.max(0.0, spring.currentValue))
+                darkenView.setBackgroundColor(Color.argb(((MAX_SPRING_VALUE - alphaValue) * 255).toInt(), 0, 0, 0))
+                Log.d("RA", "spring curv = ${spring.currentValue}")
+            }
+        })
+        spring.springConfig.tension = 300.0
+
+        // Bottom by default
+        spring.endValue = MAX_SPRING_VALUE
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
@@ -54,6 +93,42 @@ class RoomActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         mapView.onSaveInstanceState(mapViewBundle)
+    }
+
+    var temp = 0f
+
+    override fun onTouch(p0: View?, event: MotionEvent): Boolean {
+        val diffY = event.rawY - downY
+        val verticalScrollOffset = placesRecyclerView.computeVerticalScrollOffset()
+        val translationY = placesRecyclerView.translationY
+
+        when (event.action and MotionEvent.ACTION_MASK) {
+            MotionEvent.ACTION_DOWN -> {
+                downY = event.rawY
+                temp = placesRecyclerView.translationY
+                return true
+            }
+            MotionEvent.ACTION_UP -> {
+                val percentage = translationY / placesRecyclerView.height
+                if (percentage > DIFFY_THRESHOLD_PERCENTAGE && diffY > 0) {
+                    // bounce down
+                    spring.endValue = MAX_SPRING_VALUE
+                } else {
+                    // bounce return to top
+                    spring.endValue = 0.0
+                }
+                return false
+            }
+            MotionEvent.ACTION_MOVE -> {
+                if ((diffY < 0f && translationY <= 0f) || (diffY > 0f && verticalScrollOffset != 0)) {
+                    return false
+                }
+                placesRecyclerView.translationY = temp + diffY
+                spring.currentValue = (placesRecyclerView.translationY / placesRecyclerView.height).toDouble()
+                return true
+            }
+        }
+        return false
     }
 
     /**
