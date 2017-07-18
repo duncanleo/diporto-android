@@ -74,7 +74,6 @@ class RoomActivity : AppCompatActivity(), OnMapReadyCallback, View.OnTouchListen
                 placesRecyclerView.translationY = Math.max(-0.02f * placesRecyclerView.height, (spring.currentValue * placesRecyclerView.height).toFloat())
                 val alphaValue = Math.min(MAX_SPRING_VALUE, Math.max(0.0, spring.currentValue))
                 darkenView.setBackgroundColor(Color.argb(((MAX_SPRING_VALUE - alphaValue) * 255).toInt(), 0, 0, 0))
-                Log.d("RA", "spring curv = ${spring.currentValue}")
             }
         })
         spring.springConfig.tension = 300.0
