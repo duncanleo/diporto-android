@@ -2,6 +2,7 @@ package me.duncanleo.diporto.activity
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.MenuItem
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -12,7 +13,7 @@ import me.duncanleo.diporto.R
 
 
 class RoomActivity : AppCompatActivity(), OnMapReadyCallback {
-    private var mMap: GoogleMap? = null
+    private var googleMap: GoogleMap? = null
     private val MAPVIEW_BUNDLE_KEY = "MapViewBundleKey"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,6 +27,9 @@ class RoomActivity : AppCompatActivity(), OnMapReadyCallback {
         mapView.onCreate(mapViewBundle)
 
         mapView.getMapAsync(this@RoomActivity)
+
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
@@ -50,12 +54,14 @@ class RoomActivity : AppCompatActivity(), OnMapReadyCallback {
      * installed Google Play services and returned to the app.
      */
     override fun onMapReady(googleMap: GoogleMap) {
-        mMap = googleMap
+        this.googleMap = googleMap
 
         // Add a marker in Sydney and move the camera
         val sydney = LatLng(-34.0, 151.0)
-        mMap!!.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        mMap!!.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        this.googleMap!!.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
+        this.googleMap!!.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        this.googleMap!!.uiSettings.isZoomGesturesEnabled = true
+        this.googleMap!!.uiSettings.isZoomControlsEnabled = true
     }
 
     override fun onResume() {
@@ -86,5 +92,14 @@ class RoomActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onLowMemory() {
         super.onLowMemory()
         mapView.onLowMemory()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            android.R.id.home -> {
+                finish()
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }
