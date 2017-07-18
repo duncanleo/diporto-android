@@ -12,6 +12,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import kotlinx.android.synthetic.main.activity_main.*
 import me.duncanleo.diporto.R
 import me.duncanleo.diporto.adapter.RoomsRecyclerViewAdapter
+import me.duncanleo.diporto.model.Location
 import me.duncanleo.diporto.model.Room
 import me.duncanleo.diporto.model.User
 
@@ -22,13 +23,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val fakeUser = User("John Smith", "john@gmail.com", "johnsmith")
+        val fakeUser = User("John Smith", "john@gmail.com", "johnsmith", Location(1.0, 103.0))
 
         roomsRecyclerView.layoutManager = LinearLayoutManager(baseContext)
         roomsRecyclerView.addItemDecoration(DividerItemDecoration(baseContext, DividerItemDecoration.VERTICAL))
         roomsRecyclerView.adapter = RoomsRecyclerViewAdapter(listOf(
-                Room(0, "Some Room", fakeUser, listOf()),
-                Room(1, "Some Other Room", fakeUser, listOf())
+                Room(0, "Some Room", fakeUser, listOf(fakeUser)),
+                Room(1, "Some Other Room", fakeUser, listOf(fakeUser))
         ))
     }
 

@@ -1,5 +1,6 @@
 package me.duncanleo.diporto.activity
 
+import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
@@ -8,8 +9,10 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.PolylineOptions
 import kotlinx.android.synthetic.main.activity_room.*
 import me.duncanleo.diporto.R
+import me.duncanleo.diporto.model.Location
 import me.duncanleo.diporto.model.Room
 
 
@@ -18,8 +21,9 @@ class RoomActivity : AppCompatActivity(), OnMapReadyCallback {
         val roomKey = "room"
     }
 
-    private var googleMap: GoogleMap? = null
+    private lateinit var googleMap: GoogleMap
     private val MAPVIEW_BUNDLE_KEY = "MapViewBundleKey"
+    private lateinit var room: Room
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +40,7 @@ class RoomActivity : AppCompatActivity(), OnMapReadyCallback {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val room = intent.getParcelableExtra<Room>(roomKey)
+        room = intent.getParcelableExtra<Room>(roomKey)
         supportActionBar?.title = room.name
     }
 
@@ -61,15 +65,28 @@ class RoomActivity : AppCompatActivity(), OnMapReadyCallback {
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
-    override fun onMapReady(googleMap: GoogleMap) {
-        this.googleMap = googleMap
+    override fun onMapReady(map: GoogleMap) {
+        googleMap = map
 
         // Add a marker in Sydney and move the camera
-        val sydney = LatLng(-34.0, 151.0)
-        this.googleMap!!.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        this.googleMap!!.moveCamera(CameraUpdateFactory.newLatLng(sydney))
-        this.googleMap!!.uiSettings.isZoomGesturesEnabled = true
-        this.googleMap!!.uiSettings.isZoomControlsEnabled = true
+        googleMap.uiSettings.isZoomGesturesEnabled = true
+        googleMap.uiSettings.isZoomControlsEnabled = true
+
+        displayLocations()
+    }
+
+    fun displayLocations() {
+        room.members.filter { it.currentLocation != null }.map { googleMap.addMarker(MarkerOptions()
+                .position(it.currentLocation!!.getLatLng())
+                .title(it.name)) }
+        googleMap.addPolyline(PolylineOptions()
+                .add(*getLocations().map { LatLng(it.lat, it.lon) }.toTypedArray())
+                .width(5f)
+                .color(Color.GREEN))
+    }
+
+    fun getLocations(): List<Location> {
+        return room.members.map { it.currentLocation }.filterNotNull()
     }
 
     override fun onResume() {

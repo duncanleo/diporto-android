@@ -9,8 +9,9 @@ import android.os.Parcelable
 data class User (
         val name: String,
         val email: String,
-        val userName: String
-) : Parcelable {
+        val userName: String,
+        val currentLocation: Location?
+) : Parcelable{
     companion object {
         @JvmField val CREATOR: Parcelable.Creator<User> = object : Parcelable.Creator<User> {
             override fun createFromParcel(source: Parcel): User = User(source)
@@ -21,7 +22,8 @@ data class User (
     constructor(source: Parcel) : this(
     source.readString(),
     source.readString(),
-    source.readString()
+    source.readString(),
+    source.readParcelable<Location>(Location::class.java.classLoader)
     )
 
     override fun describeContents() = 0
@@ -30,5 +32,6 @@ data class User (
         dest.writeString(name)
         dest.writeString(email)
         dest.writeString(userName)
+        dest.writeParcelable(currentLocation, 0)
     }
 }
