@@ -9,4 +9,10 @@
     <string name="label_room_short_code">Room short code</string>
     <string name="label_cancel">Cancel</string>
     <string name="title_activity_room">Room</string>
+    <string name="label_welcome">Welcome to Diporto.</string>
+    <string name="description_welcome">Find the best places near you and your friends.</string>
+    <string name="label_location">Location</string>
+    <string name="description_location">Diporto needs your location for the Rooms feature.</string>
+    <string name="label_done">All done.</string>
+    <string name="description_done">Enjoy the app!</string>
 </resources>
