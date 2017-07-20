@@ -5,6 +5,7 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.KotlinJsonAdapterFactory
 import com.squareup.moshi.Rfc3339DateJsonAdapter
 import me.duncanleo.diporto.BuildConfig
+import me.duncanleo.diporto.prefs
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import java.util.Date
@@ -16,8 +17,6 @@ import retrofit2.converter.moshi.MoshiConverterFactory
  * Created by duncanleo on 11/7/17.
  */
 object Network {
-    var accessToken = ""
-    var refreshToken = ""
     var userAgent = "Diporto Android"
 
     val baseURL = "https://diporto.undertide.co/api/"
@@ -49,15 +48,17 @@ object Network {
                     chain.proceed(request)
                 })
                 .addInterceptor { chain ->
-                    if (accessToken.isNotEmpty()) {
+                    if (!prefs.accessToken.isNullOrEmpty()) {
                         chain.proceed(chain.request()
                                 .newBuilder()
-                                .addHeader("Authorization", "Bearer $accessToken")
+                                .addHeader("Authorization", "Bearer ${prefs.accessToken}")
                                 .build())
                     } else {
                         chain.proceed(chain.request())
                     }
-                }.build()
+                }
+                .authenticator(TokenAuthenticator())
+                .build()
         return Retrofit.Builder()
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(moshiConverter())

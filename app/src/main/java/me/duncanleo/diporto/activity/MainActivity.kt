@@ -9,28 +9,43 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import com.afollestad.materialdialogs.MaterialDialog
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import me.duncanleo.diporto.R
 import me.duncanleo.diporto.adapter.RoomsRecyclerViewAdapter
-import me.duncanleo.diporto.model.Location
 import me.duncanleo.diporto.model.Room
-import me.duncanleo.diporto.model.User
+import me.duncanleo.diporto.network.Network
 
 class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"
+    private val data = mutableListOf<Room>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val fakeUser = User("John Smith", "john@gmail.com", "johnsmith", Location(1.0, 103.0))
-
         roomsRecyclerView.layoutManager = LinearLayoutManager(baseContext)
         roomsRecyclerView.addItemDecoration(DividerItemDecoration(baseContext, DividerItemDecoration.VERTICAL))
-        roomsRecyclerView.adapter = RoomsRecyclerViewAdapter(listOf(
-                Room(0, "Some Room", fakeUser, listOf(fakeUser)),
-                Room(1, "Some Other Room", fakeUser, listOf(fakeUser))
-        ))
+
+        swipeRefreshLayout.isRefreshing = true
+
+        val adapter = RoomsRecyclerViewAdapter(data)
+        adapter.setHasStableIds(true)
+        roomsRecyclerView.adapter = adapter
+
+        Network.getDiportoService().getRooms()
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ rooms ->
+                    data.clear()
+                    data.addAll(rooms)
+                    adapter.notifyDataSetChanged()
+                    swipeRefreshLayout.post { swipeRefreshLayout.isRefreshing = false }
+                }, { error ->
+                    Log.d(TAG, "Error fetching rooms", error)
+                    swipeRefreshLayout.post { swipeRefreshLayout.isRefreshing = false }
+                })
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

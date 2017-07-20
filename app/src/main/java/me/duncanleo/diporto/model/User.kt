@@ -8,8 +8,7 @@ import android.os.Parcelable
  */
 data class User (
         val name: String,
-        val email: String,
-        val userName: String,
+        val email: String?,
         val currentLocation: Location?
 ) : Parcelable{
     companion object {
@@ -22,7 +21,6 @@ data class User (
     constructor(source: Parcel) : this(
     source.readString(),
     source.readString(),
-    source.readString(),
     source.readParcelable<Location>(Location::class.java.classLoader)
     )
 
@@ -31,7 +29,6 @@ data class User (
     override fun writeToParcel(dest: Parcel, flags: Int) {
         dest.writeString(name)
         dest.writeString(email)
-        dest.writeString(userName)
         dest.writeParcelable(currentLocation, 0)
     }
 }

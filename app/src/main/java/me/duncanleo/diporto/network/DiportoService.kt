@@ -6,6 +6,7 @@ import me.duncanleo.diporto.model.Room
 import me.duncanleo.diporto.network.payload.RequestTokenPayload
 import me.duncanleo.diporto.network.response.RequestTokenResponse
 import okhttp3.Response
+import retrofit2.Call
 import retrofit2.http.*
 
 /**
@@ -20,6 +21,9 @@ interface DiportoService {
 
     @POST("token")
     fun requestToken(@Body payload: RequestTokenPayload): Single<RequestTokenResponse>
+
+    @POST("token")
+    fun refreshToken(@Body payload: RequestTokenPayload): Call<RequestTokenResponse>
 
     @POST("login")
     @FormUrlEncoded

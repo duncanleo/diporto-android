@@ -51,6 +51,7 @@ class LoginActivity : AppCompatActivity() {
                         Network.getDiportoService().requestToken(RequestTokenPayload(
                                 username = username,
                                 password = passwordTextInputLayout.editText!!.text.toString(),
+                                refreshToken = null,
                                 grantType = "access_token"
                         )).subscribeOn(Schedulers.newThread())
                                 .observeOn(AndroidSchedulers.mainThread())

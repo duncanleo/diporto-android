@@ -35,7 +35,7 @@ class RoomsRecyclerViewAdapter : RecyclerView.Adapter<RoomsRecyclerViewAdapter.V
     }
 
     override fun getItemId(position: Int): Long {
-        return super.getItemId(position)
+        return data[position].id.toLong()
     }
 
     override fun getItemCount(): Int {

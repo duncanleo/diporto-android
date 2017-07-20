@@ -18,12 +18,9 @@ class IntroActivity : AppIntro() {
 
         // Skip onboarding if completed before.
         if (prefs.isOnboarded) {
-            if (prefs.accessToken.isNullOrEmpty()) {
-                startActivity(Intent(this@IntroActivity, LoginActivity::class.java))
-            } else {
-                startActivity(Intent(this@IntroActivity, MainActivity::class.java))
-            }
+            proceed()
             finish()
+            return
         }
 
         showSkipButton(false)
@@ -60,12 +57,15 @@ class IntroActivity : AppIntro() {
 
         // TODO: Enable this.
 //        prefs.isOnboarded = true
+        proceed()
+        finish()
+    }
 
+    fun proceed() {
         if (prefs.accessToken.isNullOrEmpty()) {
             startActivity(Intent(this@IntroActivity, LoginActivity::class.java))
         } else {
             startActivity(Intent(this@IntroActivity, MainActivity::class.java))
         }
-        finish()
     }
 }
