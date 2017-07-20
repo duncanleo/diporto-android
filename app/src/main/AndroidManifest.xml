@@ -15,7 +15,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:name=".App">
         <activity android:name=".activity.MainActivity"/>
         <activity android:name=".activity.IntroActivity"
             android:theme="@style/AppTheme.NoActionBar.Fullscreen">
@@ -29,6 +30,8 @@
             android:name=".activity.RoomActivity"
             android:label="@string/title_activity_room"
             android:theme="@style/AppTheme.NoActionBar.Transparent"/>
+        <activity android:name=".activity.LoginActivity"
+            android:theme="@style/AppTheme.NoActionBar.Fullscreen"/>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").

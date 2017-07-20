@@ -8,6 +8,10 @@
     <string name="label_join">Join</string>
     <string name="label_room_short_code">Room short code</string>
     <string name="label_cancel">Cancel</string>
+    <string name="label_username">Username</string>
+    <string name="label_password">Password</string>
+    <string name="label_login">Log in</string>
+    <string name="label_cannot_empty">This field cannot be empty.</string>
     <string name="title_activity_room">Room</string>
     <string name="label_welcome">Welcome to Diporto.</string>
     <string name="description_welcome">Find the best places near you and your friends.</string>

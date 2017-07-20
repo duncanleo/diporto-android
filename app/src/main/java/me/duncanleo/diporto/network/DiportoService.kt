@@ -3,6 +3,8 @@ package me.duncanleo.diporto.network
 import io.reactivex.Single
 import me.duncanleo.diporto.model.Place
 import me.duncanleo.diporto.model.Room
+import me.duncanleo.diporto.network.payload.RequestTokenPayload
+import me.duncanleo.diporto.network.response.RequestTokenResponse
 import okhttp3.Response
 import retrofit2.http.*
 
@@ -15,6 +17,9 @@ interface DiportoService {
 
     @GET("rooms")
     fun getRooms(): Single<List<Room>>
+
+    @POST("token")
+    fun requestToken(@Body payload: RequestTokenPayload): Single<RequestTokenResponse>
 
     @POST("login")
     @FormUrlEncoded

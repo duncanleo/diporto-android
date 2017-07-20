@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment
 import com.github.paolorotolo.appintro.AppIntro
 import com.github.paolorotolo.appintro.AppIntroFragment
 import me.duncanleo.diporto.R
+import me.duncanleo.diporto.prefs
 
 /**
  * Created by duncanleo on 18/7/17.
@@ -16,6 +17,7 @@ class IntroActivity : AppIntro() {
         super.onCreate(savedInstanceState)
 
         showSkipButton(false)
+        setColorTransitionsEnabled(true)
 
         askForPermissions(arrayOf(
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -45,7 +47,12 @@ class IntroActivity : AppIntro() {
 
     override fun onDonePressed(currentFragment: Fragment?) {
         super.onDonePressed(currentFragment)
-        startActivity(Intent(this@IntroActivity, MainActivity::class.java))
+
+        if (prefs.isLoggedIn) {
+            startActivity(Intent(this@IntroActivity, MainActivity::class.java))
+        } else {
+            startActivity(Intent(this@IntroActivity, LoginActivity::class.java))
+        }
         finish()
     }
 }
