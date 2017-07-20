@@ -1,5 +1,6 @@
 package me.duncanleo.diporto.adapter
 
+import android.content.Intent
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -12,13 +13,13 @@ import com.squareup.picasso.Picasso
 import me.duncanleo.diporto.R
 import me.duncanleo.diporto.model.Place
 import kotlinx.android.synthetic.main.item_place.view.*
+import me.duncanleo.diporto.activity.PlaceActivity
 import me.duncanleo.diporto.network.Network
 
 /**
  * Created by duncanleo on 18/7/17.
  */
 class PlacesRecyclerViewAdapter(private val data: List<Place>) : RecyclerView.Adapter<PlacesRecyclerViewAdapter.ViewHolder>() {
-
     override fun getItemCount(): Int {
         return data.size
     }
@@ -42,6 +43,11 @@ class PlacesRecyclerViewAdapter(private val data: List<Place>) : RecyclerView.Ad
 
         if (data[position].reviews.any()) {
             holder?.review?.text = data[position].reviews[0].text
+        }
+
+        holder?.itemView?.setOnClickListener {
+            val intent = Intent(holder.itemView.context, PlaceActivity::class.java)
+            holder.itemView?.context?.startActivity(intent)
         }
     }
 

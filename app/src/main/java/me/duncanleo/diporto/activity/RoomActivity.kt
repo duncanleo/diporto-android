@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.MenuItem
 import android.view.MotionEvent
@@ -45,6 +46,7 @@ class RoomActivity : AppCompatActivity(), OnMapReadyCallback, View.OnTouchListen
     private lateinit var room: Room
     private lateinit var spring: Spring
     private val data = mutableListOf<Place>()
+    private lateinit var adapter: PlacesRecyclerViewAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,9 +68,15 @@ class RoomActivity : AppCompatActivity(), OnMapReadyCallback, View.OnTouchListen
 
         placesRecyclerView.layoutManager = LinearLayoutManager(this@RoomActivity)
         placesRecyclerView.addItemDecoration(DividerItemDecoration(this@RoomActivity, DividerItemDecoration.VERTICAL))
-        placesRecyclerView.adapter = PlacesRecyclerViewAdapter(data)
+        adapter = PlacesRecyclerViewAdapter(data)
+        placesRecyclerView.adapter = adapter
 
         placesRecyclerView.setOnTouchListener(this@RoomActivity)
+        placesRecyclerView.addOnItemTouchListener(object: RecyclerView.SimpleOnItemTouchListener() {
+            override fun onInterceptTouchEvent(rv: RecyclerView?, e: MotionEvent?): Boolean {
+                return spring.currentValueIsApproximately(MAX_SPRING_VALUE)
+            }
+        })
 
         spring = SpringSystem.create().createSpring()
         spring.addListener(object: SimpleSpringListener() {
@@ -136,6 +144,7 @@ class RoomActivity : AppCompatActivity(), OnMapReadyCallback, View.OnTouchListen
             }
             MotionEvent.ACTION_MOVE -> {
                 if ((diffY < 0f && translationY <= 0f) || (diffY > 0f && verticalScrollOffset != 0)) {
+                    Log.d("RA", "Passing through")
                     return false
                 }
                 placesRecyclerView.translationY = temp + diffY
