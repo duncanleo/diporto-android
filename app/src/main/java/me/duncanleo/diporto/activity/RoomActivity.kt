@@ -13,6 +13,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.facebook.rebound.SimpleSpringListener
 import com.facebook.rebound.Spring
 import com.facebook.rebound.SpringSystem
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.*
@@ -37,6 +38,7 @@ class RoomActivity : AppCompatActivity(), OnMapReadyCallback, View.OnTouchListen
     val DIFFY_THRESHOLD_PERCENTAGE = 0.2
     var downY = 0f
     val MAX_SPRING_VALUE = 0.85
+    val SINGAPORE = LatLng(1.3521, 103.8198)
 
     private lateinit var googleMap: GoogleMap
     private val MAPVIEW_BUNDLE_KEY = "MapViewBundleKey"
@@ -160,6 +162,7 @@ class RoomActivity : AppCompatActivity(), OnMapReadyCallback, View.OnTouchListen
         googleMap.uiSettings.isZoomGesturesEnabled = true
         googleMap.uiSettings.isZoomControlsEnabled = true
 
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(SINGAPORE))
         displayLocations()
     }
 
@@ -197,6 +200,8 @@ class RoomActivity : AppCompatActivity(), OnMapReadyCallback, View.OnTouchListen
                 )
                 .strokeWidth(10f)
                 .strokeColor(resources.getColor(R.color.colorLogo)))
+
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200))
     }
 
     fun getLocations(): List<Location> {
