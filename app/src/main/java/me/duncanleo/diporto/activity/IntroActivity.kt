@@ -16,6 +16,16 @@ class IntroActivity : AppIntro() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // Skip onboarding if completed before.
+        if (prefs.isOnboarded) {
+            if (prefs.accessToken.isNullOrEmpty()) {
+                startActivity(Intent(this@IntroActivity, LoginActivity::class.java))
+            } else {
+                startActivity(Intent(this@IntroActivity, MainActivity::class.java))
+            }
+            finish()
+        }
+
         showSkipButton(false)
         setColorTransitionsEnabled(true)
 
@@ -48,10 +58,13 @@ class IntroActivity : AppIntro() {
     override fun onDonePressed(currentFragment: Fragment?) {
         super.onDonePressed(currentFragment)
 
-        if (prefs.isLoggedIn) {
-            startActivity(Intent(this@IntroActivity, MainActivity::class.java))
-        } else {
+        // TODO: Enable this.
+//        prefs.isOnboarded = true
+
+        if (prefs.accessToken.isNullOrEmpty()) {
             startActivity(Intent(this@IntroActivity, LoginActivity::class.java))
+        } else {
+            startActivity(Intent(this@IntroActivity, MainActivity::class.java))
         }
         finish()
     }

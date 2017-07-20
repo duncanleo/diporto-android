@@ -9,8 +9,19 @@ class Prefs(context: Context) {
     val PREFS_FILENAME = "me.duncanleo.diporto"
     val prefs = context.getSharedPreferences(PREFS_FILENAME, 0)
 
-    val IS_LOGGED_IN = "is_logged_in"
+    val IS_ONBOARDED = "is_onboarded"
+    val ACCESS_TOKEN = "access_token"
+    val REFRESH_TOKEN = "refresh_token"
 
-    val isLoggedIn: Boolean
-        get() = prefs.getBoolean(IS_LOGGED_IN, false)
+    var isOnboarded
+        get() = prefs.getBoolean(IS_ONBOARDED, false)
+        set(value) = prefs.edit().putBoolean(IS_ONBOARDED, value).apply()
+
+    var accessToken: String?
+        get() = prefs.getString(ACCESS_TOKEN, null)
+        set(value) = prefs.edit().putString(ACCESS_TOKEN, value).apply()
+
+    var refreshToken: String?
+        get() = prefs.getString(REFRESH_TOKEN, null)
+        set(value) = prefs.edit().putString(REFRESH_TOKEN, value).apply()
 }

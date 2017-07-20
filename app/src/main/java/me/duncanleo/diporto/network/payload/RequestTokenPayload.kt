@@ -7,5 +7,6 @@ import com.squareup.moshi.Json
  */
 data class RequestTokenPayload(
         @Json(name = "UserName") val username: String,
-        @Json(name = "Password") val password: String
+        @Json(name = "Password") val password: String,
+        @Json(name = "GrantType") val grantType: String
 )
