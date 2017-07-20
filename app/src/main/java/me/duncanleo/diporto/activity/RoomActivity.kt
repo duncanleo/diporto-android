@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
+import com.afollestad.materialdialogs.MaterialDialog
 import com.facebook.rebound.SimpleSpringListener
 import com.facebook.rebound.Spring
 import com.facebook.rebound.SpringSystem
@@ -17,6 +18,8 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_room.*
 import me.duncanleo.diporto.R
 import me.duncanleo.diporto.adapter.PlacesRecyclerViewAdapter
@@ -24,6 +27,7 @@ import me.duncanleo.diporto.model.Location
 import me.duncanleo.diporto.model.Place
 import me.duncanleo.diporto.model.Review
 import me.duncanleo.diporto.model.Room
+import me.duncanleo.diporto.network.Network
 import java.util.*
 
 
@@ -32,6 +36,7 @@ class RoomActivity : AppCompatActivity(), OnMapReadyCallback, View.OnTouchListen
         val roomKey = "room"
     }
 
+    val TAG = "RoomActivity"
     val DIFFY_THRESHOLD_PERCENTAGE = 0.2
     var downY = 0f
     val MAX_SPRING_VALUE = 0.85
@@ -40,6 +45,7 @@ class RoomActivity : AppCompatActivity(), OnMapReadyCallback, View.OnTouchListen
     private val MAPVIEW_BUNDLE_KEY = "MapViewBundleKey"
     private lateinit var room: Room
     private lateinit var spring: Spring
+    private val data = mutableListOf<Place>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,12 +65,9 @@ class RoomActivity : AppCompatActivity(), OnMapReadyCallback, View.OnTouchListen
         room = intent.getParcelableExtra<Room>(roomKey)
         supportActionBar?.title = room.name
 
-        val fakePlaces = MutableList(20) {
-            Place(-1, "Pink Candy $it", 1.0, 103.0, "+65 12345678", "123 ABC Street", "", listOf("food"), listOf(), listOf(Review(-1, 5.0, Date(), "It was really good!!!!", -1)))
-        }
         placesRecyclerView.layoutManager = LinearLayoutManager(this@RoomActivity)
         placesRecyclerView.addItemDecoration(DividerItemDecoration(this@RoomActivity, DividerItemDecoration.VERTICAL))
-        placesRecyclerView.adapter = PlacesRecyclerViewAdapter(fakePlaces)
+        placesRecyclerView.adapter = PlacesRecyclerViewAdapter(data)
 
         placesRecyclerView.setOnTouchListener(this@RoomActivity)
 
@@ -80,6 +83,20 @@ class RoomActivity : AppCompatActivity(), OnMapReadyCallback, View.OnTouchListen
 
         // Bottom by default
         spring.endValue = MAX_SPRING_VALUE
+
+        Network.getDiportoService().getPlacesByRoomId(room.id)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ places ->
+                    data.addAll(places)
+                    placesRecyclerView.adapter.notifyDataSetChanged()
+                }, { error ->
+                    Log.d(TAG, "Error loading places", error)
+                    MaterialDialog.Builder(this@RoomActivity)
+                            .title(R.string.label_error)
+                            .content(R.string.description_error_loading_places)
+                            .show()
+                })
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {

@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.amulyakhare.textdrawable.TextDrawable
+import com.amulyakhare.textdrawable.util.ColorGenerator
 import com.squareup.picasso.Picasso
 import me.duncanleo.diporto.R
 import me.duncanleo.diporto.model.Place
@@ -28,11 +30,15 @@ class PlacesRecyclerViewAdapter(private val data: List<Place>) : RecyclerView.Ad
     override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
         holder?.name?.text = data[position].name
 
-        if (data[position].photos.any()) {
-            Picasso.with(holder?.name?.context).load("${Network.baseURL}/photos/${data[position].photos[0].id}").into(holder?.image)
-        } else {
-            holder?.image?.setImageResource(R.drawable.ic_do_not_disturb_24dp)
-        }
+        val iconDrawable = TextDrawable.builder()
+                .beginConfig()
+                .fontSize(50)
+                .width(100)
+                .height(100)
+                .bold()
+                .endConfig()
+                .buildRound(data[position].name[0].toString(), ColorGenerator.MATERIAL.getColor(data[position].name))
+        holder?.image?.setImageDrawable(iconDrawable)
 
         if (data[position].reviews.any()) {
             holder?.review?.text = data[position].reviews[0].text

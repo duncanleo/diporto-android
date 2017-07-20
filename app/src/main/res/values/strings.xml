@@ -14,6 +14,7 @@
     <string name="label_cannot_empty">This field cannot be empty.</string>
     <string name="label_error">An error occurred</string>
     <string name="description_error_login">There was a problem logging you in.</string>
+    <string name="description_error_loading_places">There was an error loading places.</string>
     <string name="title_activity_room">Room</string>
     <string name="label_welcome">Welcome to Diporto.</string>
     <string name="description_welcome">Find the best places near you and your friends.</string>

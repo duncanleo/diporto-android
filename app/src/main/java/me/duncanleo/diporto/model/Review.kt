@@ -1,6 +1,5 @@
 package me.duncanleo.diporto.model
 
-import com.squareup.moshi.Json
 import java.util.*
 
 /**
@@ -11,5 +10,5 @@ data class Review (
         val rating: Double,
         val time: Date,
         val text: String,
-        @Json(name = "user_id") val userId: Int
+        val user: User
 )
