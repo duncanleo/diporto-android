@@ -42,26 +42,35 @@ class LoginActivity : AppCompatActivity() {
 
             val username = usernameTextInputLayout.editText!!.text.toString()
 
-            Network.getDiportoService().requestToken(RequestTokenPayload(
-                    username = username,
-                    password = passwordTextInputLayout.editText!!.text.toString(),
-                    grantType = "access_token"
-            )).subscribeOn(Schedulers.newThread())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ (token, refreshToken) ->
-                        Log.d(TAG, "Logged in")
-                        prefs.refreshToken = refreshToken
-                        prefs.accessToken = token
+            MaterialDialog.Builder(this@LoginActivity)
+                    .title(R.string.label_logging_in)
+                    .content(R.string.label_please_wait)
+                    .progress(true, 0)
+                    .show()
+                    .setOnShowListener { dialog ->
+                        Network.getDiportoService().requestToken(RequestTokenPayload(
+                                username = username,
+                                password = passwordTextInputLayout.editText!!.text.toString(),
+                                grantType = "access_token"
+                        )).subscribeOn(Schedulers.newThread())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe({ (token, refreshToken) ->
+                                    Log.d(TAG, "Logged in")
+                                    prefs.refreshToken = refreshToken
+                                    prefs.accessToken = token
 
-                        startActivity(Intent(this@LoginActivity, MainActivity::class.java))
-                        finish()
-                    }, { error ->
-                        error.printStackTrace()
-                        MaterialDialog.Builder(this@LoginActivity)
-                                .title(R.string.label_error)
-                                .content(R.string.description_error_login)
-                                .show()
-                    })
+                                    startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                                    dialog.cancel()
+                                    finish()
+                                }, { error ->
+                                    error.printStackTrace()
+                                    dialog.cancel()
+                                    MaterialDialog.Builder(this@LoginActivity)
+                                            .title(R.string.label_error)
+                                            .content(R.string.description_error_login)
+                                            .show()
+                                })
+                    }
         }
     }
 }

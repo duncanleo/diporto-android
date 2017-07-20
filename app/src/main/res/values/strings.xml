@@ -20,5 +20,7 @@
     <string name="label_location">Location</string>
     <string name="description_location">Diporto needs your location for the Rooms feature.</string>
     <string name="label_done">All done.</string>
+    <string name="label_logging_in">Logging in</string>
+    <string name="label_please_wait">Please wait</string>
     <string name="description_done">Enjoy the app!</string>
 </resources>
