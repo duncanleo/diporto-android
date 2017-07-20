@@ -15,20 +15,17 @@ import com.facebook.rebound.Spring
 import com.facebook.rebound.SpringSystem
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.maps.model.PolylineOptions
+import com.google.android.gms.maps.model.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_room.*
+import me.duncanleo.diporto.App
 import me.duncanleo.diporto.R
 import me.duncanleo.diporto.adapter.PlacesRecyclerViewAdapter
 import me.duncanleo.diporto.model.Location
 import me.duncanleo.diporto.model.Place
-import me.duncanleo.diporto.model.Review
 import me.duncanleo.diporto.model.Room
 import me.duncanleo.diporto.network.Network
-import java.util.*
 
 
 class RoomActivity : AppCompatActivity(), OnMapReadyCallback, View.OnTouchListener {
@@ -167,13 +164,39 @@ class RoomActivity : AppCompatActivity(), OnMapReadyCallback, View.OnTouchListen
     }
 
     fun displayLocations() {
-        room.members.filter { it.currentLocation != null }.map { googleMap.addMarker(MarkerOptions()
-                .position(it.currentLocation!!.getLatLng())
-                .title(it.name)) }
-        googleMap.addPolyline(PolylineOptions()
-                .add(*getLocations().map { LatLng(it.lat, it.lon) }.toTypedArray())
-                .width(5f)
-                .color(Color.GREEN))
+        App.rxLocation?.location()?.lastLocation()
+                ?.subscribe ({ userLocation ->
+                    // Own marker
+                    googleMap.addMarker(MarkerOptions()
+                            .position(LatLng(userLocation.latitude, userLocation.longitude))
+                            .title(getString(R.string.label_you)))
+                    // Other members marker
+                    room.members.filter { it.currentLocation != null }.map { googleMap.addMarker(MarkerOptions()
+                            .position(it.currentLocation!!.getLatLng())
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN))
+                            .title(it.name)
+                            .snippet("${"%.2f".format(userLocation.distanceTo(it.currentLocation.getLocation())/1000.0)} km away")) }
+                }, { error ->
+                    room.members.filter { it.currentLocation != null }.map { googleMap.addMarker(MarkerOptions()
+                            .position(it.currentLocation!!.getLatLng())
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN))
+                            .title(it.name)) }
+                })
+
+        val boundsBuilder = LatLngBounds.builder()
+        getLocations().forEach { boundsBuilder.include(it.getLatLng()) }
+
+        val bounds = boundsBuilder.build()
+
+        googleMap.addPolygon(PolygonOptions()
+                .add(
+                        bounds.northeast,
+                        LatLng(bounds.northeast.latitude, bounds.southwest.longitude),
+                        bounds.southwest,
+                        LatLng(bounds.southwest.latitude, bounds.northeast.longitude)
+                )
+                .strokeWidth(10f)
+                .strokeColor(resources.getColor(R.color.colorLogo)))
     }
 
     fun getLocations(): List<Location> {

@@ -34,4 +34,11 @@ data class Location (
     fun getLatLng(): LatLng {
         return LatLng(lat, lon)
     }
+
+    fun getLocation(): android.location.Location {
+        val loc = android.location.Location("dummyProvider")
+        loc.latitude = lat
+        loc.longitude = lon
+        return loc
+    }
 }

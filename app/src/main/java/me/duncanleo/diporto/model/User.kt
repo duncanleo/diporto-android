@@ -2,6 +2,7 @@ package me.duncanleo.diporto.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.squareup.moshi.Json
 
 /**
  * Created by duncanleo on 17/7/17.
@@ -9,7 +10,7 @@ import android.os.Parcelable
 data class User (
         val name: String,
         val email: String?,
-        val currentLocation: Location?
+        @Json(name = "current_location") val currentLocation: Location?
 ) : Parcelable{
     companion object {
         @JvmField val CREATOR: Parcelable.Creator<User> = object : Parcelable.Creator<User> {
