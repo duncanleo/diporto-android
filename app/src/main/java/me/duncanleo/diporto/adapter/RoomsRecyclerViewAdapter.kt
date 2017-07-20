@@ -10,6 +10,7 @@ import me.duncanleo.diporto.R
 import me.duncanleo.diporto.model.Room
 import kotlinx.android.synthetic.main.item_room.view.*
 import me.duncanleo.diporto.activity.RoomActivity
+import me.duncanleo.diporto.view.RoomMembersView
 
 /**
  * Created by duncanleo on 17/7/17.
@@ -32,6 +33,7 @@ class RoomsRecyclerViewAdapter : RecyclerView.Adapter<RoomsRecyclerViewAdapter.V
             holder.itemView?.context?.startActivity(intent)
         }
         holder?.name?.text = data[position].name
+        holder?.membersContainer?.members = data[position].members.map { it.name }.toMutableList()
     }
 
     override fun getItemId(position: Int): Long {
@@ -44,5 +46,6 @@ class RoomsRecyclerViewAdapter : RecyclerView.Adapter<RoomsRecyclerViewAdapter.V
 
     class ViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
         val name: TextView? = itemView?.roomNameTextView
+        val membersContainer: RoomMembersView? = itemView?.membersContainer
     }
 }
