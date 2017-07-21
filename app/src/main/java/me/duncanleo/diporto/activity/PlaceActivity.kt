@@ -4,12 +4,15 @@ import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.DividerItemDecoration
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_place.*
 import kotlinx.android.synthetic.main.content_place.*
 import me.duncanleo.diporto.R
+import me.duncanleo.diporto.adapter.ReviewsRecyclerViewAdapter
 import me.duncanleo.diporto.model.Place
 import me.duncanleo.diporto.network.Network
 
@@ -44,7 +47,9 @@ class PlaceActivity : AppCompatActivity() {
         addressTextView.text = place.address
         phoneTextView.text = place.phone
 
-
+        reviewsRecyclerView.layoutManager = LinearLayoutManager(this@PlaceActivity)
+        reviewsRecyclerView.addItemDecoration(DividerItemDecoration(this@PlaceActivity, DividerItemDecoration.HORIZONTAL))
+        reviewsRecyclerView.adapter = ReviewsRecyclerViewAdapter(place.reviews)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
