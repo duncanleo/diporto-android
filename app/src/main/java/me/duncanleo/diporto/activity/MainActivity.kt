@@ -81,6 +81,11 @@ class MainActivity : AppCompatActivity() {
                                         load()
                                     }, { error ->
                                         Log.d(TAG, "error occured creating room", error)
+                                        MaterialDialog.Builder(this@MainActivity)
+                                                .title(R.string.label_error)
+                                                .content("Error creating $input")
+                                                .positiveText(R.string.label_ok)
+                                                .show()
                                     })
                         })
                         .show()
@@ -94,6 +99,24 @@ class MainActivity : AppCompatActivity() {
                         .negativeText(R.string.label_cancel)
                         .input(getString(R.string.label_room_short_code), "", { _, input ->
                             Log.d(TAG, "Joining room: '$input'")
+                            Network.getDiportoService().joinRoom(input.toString())
+                                    .subscribeOn(Schedulers.newThread())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe({ _ ->
+                                        load()
+                                        MaterialDialog.Builder(this@MainActivity)
+                                                .title(R.string.label_joined_room)
+                                                .content("Joined $input")
+                                                .positiveText(R.string.label_ok)
+                                                .show()
+                                    }, { error ->
+                                        Log.d(TAG, "error occured joining room", error)
+                                        MaterialDialog.Builder(this@MainActivity)
+                                                .title(R.string.label_error)
+                                                .content("Error joining $input")
+                                                .positiveText(R.string.label_ok)
+                                                .show()
+                                    })
                         })
                         .show()
             }

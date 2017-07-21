@@ -29,6 +29,9 @@ interface DiportoService {
     @POST("rooms")
     fun createRoom(@Body payload: CreateRoomPayload): Single<Any>
 
+    @POST("rooms/{shortCode}/memberships")
+    fun joinRoom(@Path("shortCode") shortCode: String): Single<Any>
+
     @POST("login")
     @FormUrlEncoded
     fun login(@Field("UserName") userName: String, @Field("Password") password: String) : Single<Response>
