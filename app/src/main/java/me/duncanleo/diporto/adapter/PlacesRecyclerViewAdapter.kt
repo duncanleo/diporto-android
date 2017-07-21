@@ -47,6 +47,7 @@ class PlacesRecyclerViewAdapter(private val data: List<Place>) : RecyclerView.Ad
 
         holder?.itemView?.setOnClickListener {
             val intent = Intent(holder.itemView.context, PlaceActivity::class.java)
+            intent.putExtra(PlaceActivity.placeKey, data[position])
             holder.itemView?.context?.startActivity(intent)
         }
     }

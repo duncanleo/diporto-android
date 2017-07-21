@@ -52,6 +52,7 @@ dependencies {
     compile('com.patloew.rxlocation:rxlocation:1.0.3', {
         exclude group: 'com.google.android.gms', module: 'play-services-location'
     })
+    compile 'com.synnapps:carouselview:0.1.4'
     testCompile 'junit:junit:4.12'
 }
 repositories {

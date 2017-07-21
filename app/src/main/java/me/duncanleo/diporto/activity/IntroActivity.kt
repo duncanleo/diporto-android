@@ -55,8 +55,7 @@ class IntroActivity : AppIntro() {
     override fun onDonePressed(currentFragment: Fragment?) {
         super.onDonePressed(currentFragment)
 
-        // TODO: Enable this.
-//        prefs.isOnboarded = true
+        prefs.isOnboarded = true
         proceed()
         finish()
     }

@@ -172,7 +172,10 @@ class RoomActivity : AppCompatActivity(), OnMapReadyCallback, View.OnTouchListen
         googleMap.uiSettings.isZoomControlsEnabled = true
 
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(SINGAPORE))
-        displayLocations()
+
+        googleMap.setOnMapLoadedCallback {
+            displayLocations()
+        }
     }
 
     fun displayLocations() {

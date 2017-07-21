@@ -20,7 +20,17 @@
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:expandedTitleTextAppearance="@style/TextAppearance.Design.CollapsingToolbar.Expanded.Shadow">
+
+            <com.synnapps.carouselview.CarouselView
+                android:id="@+id/appBarImageCarousel"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_collapseMode="parallax"
+                app:indicatorGravity="top|center_horizontal"
+                app:indicatorMarginVertical="23dp"
+                app:radius="4dp"/>
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
