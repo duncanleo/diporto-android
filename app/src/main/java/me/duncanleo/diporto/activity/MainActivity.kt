@@ -16,6 +16,7 @@ import me.duncanleo.diporto.R
 import me.duncanleo.diporto.adapter.RoomsRecyclerViewAdapter
 import me.duncanleo.diporto.model.Room
 import me.duncanleo.diporto.network.Network
+import me.duncanleo.diporto.network.payload.CreateRoomPayload
 
 class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"
@@ -29,8 +30,6 @@ class MainActivity : AppCompatActivity() {
         roomsRecyclerView.layoutManager = LinearLayoutManager(baseContext)
         roomsRecyclerView.addItemDecoration(DividerItemDecoration(baseContext, DividerItemDecoration.VERTICAL))
 
-        swipeRefreshLayout.isRefreshing = true
-
         adapter = RoomsRecyclerViewAdapter(data)
         adapter.setHasStableIds(true)
         roomsRecyclerView.adapter = adapter
@@ -42,6 +41,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun load() {
+        swipeRefreshLayout.isRefreshing = true
         Network.getDiportoService().getRooms()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -72,6 +72,16 @@ class MainActivity : AppCompatActivity() {
                         .negativeText(R.string.label_cancel)
                         .input(getString(R.string.label_room_name), "", { _, input ->
                             Log.d(TAG, "Creating room: '$input'")
+                            Network.getDiportoService().createRoom(CreateRoomPayload(
+                                    name = input.toString()
+                            ))
+                                    .subscribeOn(Schedulers.newThread())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe({ _ ->
+                                        load()
+                                    }, { error ->
+                                        Log.d(TAG, "error occured creating room", error)
+                                    })
                         })
                         .show()
             }

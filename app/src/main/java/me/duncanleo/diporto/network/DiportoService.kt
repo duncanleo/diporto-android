@@ -3,6 +3,7 @@ package me.duncanleo.diporto.network
 import io.reactivex.Single
 import me.duncanleo.diporto.model.Place
 import me.duncanleo.diporto.model.Room
+import me.duncanleo.diporto.network.payload.CreateRoomPayload
 import me.duncanleo.diporto.network.payload.RequestTokenPayload
 import me.duncanleo.diporto.network.response.RequestTokenResponse
 import okhttp3.Response
@@ -24,6 +25,9 @@ interface DiportoService {
 
     @POST("token")
     fun refreshToken(@Body payload: RequestTokenPayload): Call<RequestTokenResponse>
+
+    @POST("rooms")
+    fun createRoom(@Body payload: CreateRoomPayload): Single<Any>
 
     @POST("login")
     @FormUrlEncoded
