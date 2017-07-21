@@ -64,7 +64,7 @@ class RoomActivity : AppCompatActivity(), OnMapReadyCallback, View.OnTouchListen
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         room = intent.getParcelableExtra<Room>(roomKey)
-        supportActionBar?.title = room.name
+        supportActionBar?.title = "${room.name} (${room.shortCode})"
 
         placesRecyclerView.layoutManager = LinearLayoutManager(this@RoomActivity)
         placesRecyclerView.addItemDecoration(DividerItemDecoration(this@RoomActivity, DividerItemDecoration.VERTICAL))

@@ -44,7 +44,7 @@ class PlaceActivity : AppCompatActivity() {
         addressTextView.text = place.address
         phoneTextView.text = place.phone
 
-        
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
