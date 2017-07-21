@@ -73,5 +73,9 @@ class LoginActivity : AppCompatActivity() {
                                 })
                     }
         }
+
+        createAccountTextView.setOnClickListener {
+            startActivity(Intent(this@LoginActivity, RegisterActivity::class.java))
+        }
     }
 }

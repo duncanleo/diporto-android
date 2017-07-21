@@ -27,6 +27,9 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    compile('com.patloew.rxlocation:rxlocation:1.0.3', {
+        exclude group: 'com.google.android.gms', module: 'play-services-location'
+    })
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:recyclerview-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
@@ -49,9 +52,6 @@ dependencies {
     compile 'com.facebook.rebound:rebound:0.3.8'
     compile 'com.afollestad.material-dialogs:core:0.9.4.5'
     compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
-    compile('com.patloew.rxlocation:rxlocation:1.0.3', {
-        exclude group: 'com.google.android.gms', module: 'play-services-location'
-    })
     compile 'com.synnapps:carouselview:0.1.4'
     testCompile 'junit:junit:4.12'
 }
