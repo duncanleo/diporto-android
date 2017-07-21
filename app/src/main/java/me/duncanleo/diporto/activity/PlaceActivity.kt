@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_place.*
+import kotlinx.android.synthetic.main.content_place.*
 import me.duncanleo.diporto.R
 import me.duncanleo.diporto.model.Place
 import me.duncanleo.diporto.network.Network
@@ -39,6 +40,11 @@ class PlaceActivity : AppCompatActivity() {
             }
             appBarImageCarousel.pageCount = place.photos.size
         }
+
+        addressTextView.text = place.address
+        phoneTextView.text = place.phone
+
+        
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
