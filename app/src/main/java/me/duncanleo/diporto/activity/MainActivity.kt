@@ -20,6 +20,7 @@ import me.duncanleo.diporto.network.Network
 class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"
     private val data = mutableListOf<Room>()
+    private lateinit var adapter: RoomsRecyclerViewAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,10 +31,17 @@ class MainActivity : AppCompatActivity() {
 
         swipeRefreshLayout.isRefreshing = true
 
-        val adapter = RoomsRecyclerViewAdapter(data)
+        adapter = RoomsRecyclerViewAdapter(data)
         adapter.setHasStableIds(true)
         roomsRecyclerView.adapter = adapter
 
+        load()
+        swipeRefreshLayout.setOnRefreshListener {
+            load()
+        }
+    }
+
+    fun load() {
         Network.getDiportoService().getRooms()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
