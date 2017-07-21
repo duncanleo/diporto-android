@@ -19,7 +19,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 object Network {
     var userAgent = "Diporto Android"
 
-    val baseURL = "https://diporto.undertide.co/api/"
+    val baseURL = "https://diporto-mobile.undertide.co/api/"
     fun getDiportoService(): DiportoService {
         return getRetrofitBuilder().baseUrl(baseURL)
                 .build()
