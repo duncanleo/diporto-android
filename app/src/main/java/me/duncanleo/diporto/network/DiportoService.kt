@@ -5,6 +5,7 @@ import me.duncanleo.diporto.model.Place
 import me.duncanleo.diporto.model.Room
 import me.duncanleo.diporto.network.payload.CreateRoomPayload
 import me.duncanleo.diporto.network.payload.RequestTokenPayload
+import me.duncanleo.diporto.network.payload.UpdateLocationPayload
 import me.duncanleo.diporto.network.response.RequestTokenResponse
 import okhttp3.Response
 import retrofit2.Call
@@ -31,6 +32,9 @@ interface DiportoService {
 
     @POST("rooms/{shortCode}/memberships")
     fun joinRoom(@Path("shortCode") shortCode: String): Single<Any>
+
+    @PUT("location")
+    fun updateLocation(@Body payload: UpdateLocationPayload): Single<Any>
 
     @POST("register")
     @FormUrlEncoded

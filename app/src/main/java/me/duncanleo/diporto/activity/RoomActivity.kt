@@ -2,11 +2,13 @@ package me.duncanleo.diporto.activity
 
 import android.graphics.Color
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
+import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
@@ -18,6 +20,8 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.*
+import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_room.*
@@ -28,6 +32,7 @@ import me.duncanleo.diporto.model.Location
 import me.duncanleo.diporto.model.Place
 import me.duncanleo.diporto.model.Room
 import me.duncanleo.diporto.network.Network
+import me.duncanleo.diporto.network.payload.UpdateLocationPayload
 
 
 class RoomActivity : AppCompatActivity(), OnMapReadyCallback, View.OnTouchListener {
@@ -250,10 +255,40 @@ class RoomActivity : AppCompatActivity(), OnMapReadyCallback, View.OnTouchListen
         mapView.onLowMemory()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_room, menu)
+        return true
+    }
+
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             android.R.id.home -> {
                 finish()
+            }
+            R.id.menu_update_location -> {
+                App.rxLocation?.location()
+                        ?.lastLocation()
+                        ?.toObservable()
+                        ?.flatMap {
+                            Network.getDiportoService().updateLocation(UpdateLocationPayload(
+                                    lat = it.latitude,
+                                    lon = it.longitude
+                            )).subscribeOn(Schedulers.newThread())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .onErrorResumeNext { Single.just("") }
+                                    .toObservable()
+                        }
+                        ?.subscribe({
+                            Snackbar.make(mapView, R.string.toast_location_updated, Snackbar.LENGTH_SHORT).show()
+                            googleMap.clear()
+                            displayLocations()
+                        }, { error ->
+                            Log.d(TAG, "Error updating location", error)
+                            MaterialDialog.Builder(this@RoomActivity)
+                                    .title(R.string.label_error)
+                                    .content(R.string.description_error_updating_location)
+                                    .show()
+                        })
             }
         }
         return super.onOptionsItemSelected(item)

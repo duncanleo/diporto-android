@@ -22,10 +22,12 @@
     <string name="description_error_login">There was a problem logging you in.</string>
     <string name="description_error_register">There was a problem creating the account.</string>
     <string name="description_error_loading_places">There was an error loading places.</string>
+    <string name="description_error_updating_location">There was an error updating locations.</string>
     <string name="title_activity_room">Room</string>
     <string name="label_welcome">Welcome to Diporto.</string>
     <string name="label_you">You</string>
     <string name="description_welcome">Find the best places near you and your friends.</string>
+    <string name="toast_location_updated">Location updated.</string>
     <string name="label_location">Location</string>
     <string name="description_location">Diporto needs your location for the Rooms feature.</string>
     <string name="label_done">All done.</string>
@@ -37,4 +39,5 @@
     <string name="label_phone">Phone</string>
     <string name="action_settings">Settings</string>
     <string name="label_joined_room">Joined room</string>
+    <string name="label_update_location">Update your location</string>
 </resources>
