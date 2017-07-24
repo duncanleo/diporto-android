@@ -2,5 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/menu_update_location"
         android:title="@string/label_update_location"/>
-
+    <item android:id="@+id/menu_refresh"
+        android:title="@string/label_refresh"/>
 </menu>

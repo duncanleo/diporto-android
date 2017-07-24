@@ -20,8 +20,6 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.*
-import io.reactivex.Observable
-import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_room.*
@@ -96,10 +94,15 @@ class RoomActivity : AppCompatActivity(), OnMapReadyCallback, View.OnTouchListen
         // Bottom by default
         spring.endValue = MAX_SPRING_VALUE
 
+        loadData()
+    }
+
+    fun loadData() {
         if (room.members.size == 1) {
             MaterialDialog.Builder(this@RoomActivity)
                     .title(R.string.label_needs_more_than_one_member)
                     .content(R.string.description_needs_more_than_one_member)
+                    .positiveText(R.string.label_ok)
                     .show()
             return
         }
@@ -300,6 +303,9 @@ class RoomActivity : AppCompatActivity(), OnMapReadyCallback, View.OnTouchListen
                                     .content(R.string.description_error_updating_location)
                                     .show()
                         })
+            }
+            R.id.menu_refresh -> {
+                loadData()
             }
         }
         return super.onOptionsItemSelected(item)
