@@ -8,6 +8,7 @@ import me.duncanleo.diporto.network.payload.RequestTokenPayload
 import me.duncanleo.diporto.network.payload.UpdateLocationPayload
 import me.duncanleo.diporto.network.response.RequestTokenResponse
 import okhttp3.Response
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -34,7 +35,7 @@ interface DiportoService {
     fun joinRoom(@Path("shortCode") shortCode: String): Single<Any>
 
     @PUT("location")
-    fun updateLocation(@Body payload: UpdateLocationPayload): Single<Any>
+    fun updateLocation(@Body payload: UpdateLocationPayload): Single<ResponseBody>
 
     @POST("register")
     @FormUrlEncoded
@@ -44,7 +45,7 @@ interface DiportoService {
             @Field("ConfirmPassword") confirmPassword: String,
             @Field("Email") email: String,
             @Field("Name") name: String
-    ): Single<Any>
+    ): Single<ResponseBody>
 
     @POST("login")
     @FormUrlEncoded

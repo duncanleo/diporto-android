@@ -275,7 +275,6 @@ class RoomActivity : AppCompatActivity(), OnMapReadyCallback, View.OnTouchListen
                                     lon = it.longitude
                             )).subscribeOn(Schedulers.newThread())
                                     .observeOn(AndroidSchedulers.mainThread())
-                                    .onErrorResumeNext { Single.just("") }
                                     .toObservable()
                         }
                         ?.subscribe({
