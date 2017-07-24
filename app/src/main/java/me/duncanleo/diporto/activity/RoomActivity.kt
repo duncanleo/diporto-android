@@ -96,6 +96,14 @@ class RoomActivity : AppCompatActivity(), OnMapReadyCallback, View.OnTouchListen
         // Bottom by default
         spring.endValue = MAX_SPRING_VALUE
 
+        if (room.members.size == 1) {
+            MaterialDialog.Builder(this@RoomActivity)
+                    .title(R.string.label_needs_more_than_one_member)
+                    .content(R.string.description_needs_more_than_one_member)
+                    .show()
+            return
+        }
+
         Network.getDiportoService().getPlacesByRoomId(room.id)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -202,6 +210,10 @@ class RoomActivity : AppCompatActivity(), OnMapReadyCallback, View.OnTouchListen
                             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN))
                             .title(it.name)) }
                 })
+
+        if (getLocations().isEmpty()) {
+            return
+        }
 
         val boundsBuilder = LatLngBounds.builder()
         getLocations().forEach { boundsBuilder.include(it.getLatLng()) }

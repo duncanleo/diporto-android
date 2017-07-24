@@ -40,4 +40,6 @@
     <string name="action_settings">Settings</string>
     <string name="label_joined_room">Joined room</string>
     <string name="label_update_location">Update your location</string>
+    <string name="label_needs_more_than_one_member">More than one member required</string>
+    <string name="description_needs_more_than_one_member">Places will be available when the room contains more than one member.</string>
 </resources>
